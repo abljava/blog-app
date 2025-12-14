@@ -2,12 +2,11 @@
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useGetPostsQuery } from '@/lib/api';
+import { ITEMS_PER_PAGE, MAX_PAGES, TRUNCATE_LENGTH } from '@/lib/constants';
+import { truncateText, createPostsUrl } from '@/lib/utils';
 import Pagination from '../Pagination/Pagination';
 import styles from './BlogList.module.scss';
 import Link from 'next/link';
-
-const ITEMS_PER_PAGE = 10;
-const MAX_PAGES = 10;
 
 export default function BlogList() {
   const router = useRouter();
@@ -26,36 +25,18 @@ export default function BlogList() {
 
   // Обработка клика по странице пагинации
   const handlePageChange = ({ selected }: { selected: number }) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('page', (selected + 1).toString()); // react-paginate использует 0-based индекс
-    router.push(`/?${params.toString()}`);
+    const newPage = selected + 1; // react-paginate использует 0-based индекс
+    router.push(createPostsUrl(search, newPage));
     // Прокрутка вверх при смене страницы
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Вычисляем количество страниц
+  // Вычисляем количество страниц (максимум MAX_PAGES)
   // Если вернулось меньше постов чем ITEMS_PER_PAGE, значит это последняя страница
-  // Иначе показываем максимум MAX_PAGES страниц
+  // Если мы на странице MAX_PAGES, то это последняя доступная страница
   const isLastPage = posts && posts.length < ITEMS_PER_PAGE;
-  let pageCount = MAX_PAGES;
-  
-  if (isLastPage) {
-    // Если это последняя страница, показываем только до текущей страницы
-    pageCount = page;
-  } else if (page === MAX_PAGES) {
-    // Если мы на максимальной странице и получили полную страницу, это может быть не последняя
-    // Но по ТЗ показываем максимум 10 страниц
-    pageCount = MAX_PAGES;
-  }
-  
-  // Показываем пагинацию только если есть хотя бы 2 страницы
+  const pageCount = (isLastPage || page >= MAX_PAGES) ? page : MAX_PAGES;
   const shouldShowPagination = pageCount > 1;
-
-  // Функция для обрезки текста до ~150 символов
-  const truncateText = (text: string, maxLength: number = 150): string => {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength).trim() + '...';
-  };
 
   if (isLoading || isFetching) {
     return (
@@ -93,7 +74,7 @@ export default function BlogList() {
             <Link href={`/posts/${post.id}`} className={styles.postLink}>
               <h2 className={styles.title}>{post.title}</h2>
             </Link>
-            <p className={styles.excerpt}>{truncateText(post.body)}</p>
+            <p className={styles.excerpt}>{truncateText(post.body, TRUNCATE_LENGTH)}</p>
           </article>
         ))}
       </div>

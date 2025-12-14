@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
+import { createPostsUrl } from '@/lib/utils';
 import styles from './SearchForm.module.scss';
 
 interface SearchFormData {
@@ -31,26 +32,13 @@ export default function SearchForm() {
   }, [currentSearch, reset]);
 
   const onSubmit = (data: SearchFormData) => {
-    const params = new URLSearchParams(searchParams.toString());
-    
-    if (data.search.trim()) {
-      params.set('search', data.search.trim());
-    } else {
-      params.delete('search');
-    }
-    
-    // Сбрасываем страницу на первую при поиске
-    params.set('page', '1');
-    
-    router.push(`/?${params.toString()}`);
+    const searchValue = data.search.trim() || undefined;
+    router.push(createPostsUrl(searchValue, 1));
   };
 
   const handleClear = () => {
     reset({ search: '' });
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete('search');
-    params.set('page', '1');
-    router.push(`/?${params.toString()}`);
+    router.push(createPostsUrl(undefined, 1));
   };
 
   return (
@@ -58,12 +46,7 @@ export default function SearchForm() {
       <div className={styles.inputWrapper}>
         <input
           type="text"
-          {...register('search', {
-            validate: (value) => {
-              // Разрешаем пустую строку для очистки поиска
-              return true;
-            },
-          })}
+          {...register('search')}
           placeholder="Поиск по названию поста..."
           className={styles.searchInput}
         />

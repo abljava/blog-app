@@ -20,7 +20,7 @@
   justify-content: center;
   min-width: 40px;
   height: 40px;
-  padding: 8px 12px;
+  padding: 8px;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
   background-color: #fff;
@@ -70,13 +70,13 @@
 // Адаптивность для мобильных устройств
 @media (max-width: 640px) {
   .pagination {
-    gap: 2px;
+    gap: 4px;
   }
 
   .pageLink {
-    min-width: 36px;
-    height: 36px;
-    padding: 6px 8px;
+    min-width: 26px;
+    height: 26px;
+    padding: 4px;
     font-size: 12px;
   }
 }

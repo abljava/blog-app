@@ -1,7 +1,5 @@
 .blogList {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
 }
 
 .posts {
@@ -92,10 +90,6 @@
 
 // Адаптивность
 @media (max-width: 640px) {
-  .blogList {
-    padding: 1rem;
-  }
-
   .post {
     padding: 1rem;
   }

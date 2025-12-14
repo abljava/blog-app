@@ -1,0 +1,49 @@
+.comment {
+  padding: 1.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.email {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 1rem 0 0 0;
+}
+
+.body {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+// Адаптивность
+@media (max-width: 640px) {
+  .comment {
+    padding: 1rem;
+  }
+
+  .name {
+    font-size: 1rem;
+  }
+
+  .body {
+    font-size: 0.9375rem;
+  }
+}
+

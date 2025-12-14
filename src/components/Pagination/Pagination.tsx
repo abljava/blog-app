@@ -16,11 +16,11 @@ export default function Pagination({
 }: PaginationProps) {
   return (
     <ReactPaginate
-      breakLabel="..."
+      breakLabel={null}
       nextLabel=">"
       onPageChange={onPageChange}
-      pageRangeDisplayed={3}
-      marginPagesDisplayed={1}
+      pageRangeDisplayed={4}
+      marginPagesDisplayed={0}
       pageCount={pageCount}
       previousLabel="<"
       renderOnZeroPageCount={null}
