@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Blog App
 
-## Getting Started
+Веб-приложение для просмотра постов блога с поиском, пагинацией и комментариями.
 
-First, run the development server:
+## Технологии
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Next.js 16** (App Router) - React фреймворк
+- **TypeScript** - типизация
+- **Redux Toolkit** - управление состоянием
+- **RTK Query** - работа с API и кеширование
+- **React Hook Form** - управление формами
+- **SCSS Modules** - стилизация компонентов
+- **react-paginate** - пагинация
+
+## Структура проекта
+
+```
+src/
+├── app/                    # Страницы Next.js (App Router)
+│   ├── page.tsx           # Главная страница
+│   ├── posts/[id]/        # Динамический роут для поста
+│   └── layout.tsx         # Корневой layout с StoreProvider
+│
+├── components/             # React компоненты
+│   ├── BlogList/          # Список постов с пагинацией
+│   ├── SearchForm/        # Форма поиска
+│   ├── Pagination/        # Компонент пагинации
+│   ├── Post/              # Детальная страница поста
+│   │   ├── Post.tsx       # Основной компонент поста
+│   │   ├── CommentsList.tsx
+│   │   └── CommentItem.tsx
+│   └── StoreProvider.tsx   # Redux Provider
+│
+└── lib/                   # Утилиты и конфигурация
+    ├── api.ts             # RTK Query API
+    ├── store.ts           # Redux store
+    ├── constants.ts       # Константы приложения
+    └── utils.ts           # Вспомогательные функции
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Функциональность
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Главная страница (`/`)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Поиск по названию поста** - форма с синхронизацией URL параметров
+- **Список постов** - отображение постов с заголовком и кратким описанием
+- **Пагинация** - навигация по страницам (максимум 10 страниц, по 10 постов на странице)
+- **Сохранение состояния** - параметры поиска и страницы сохраняются в URL
 
-## Learn More
+### Страница поста (`/posts/[id]`)
 
-To learn more about Next.js, take a look at the following resources:
+- **Детальная информация** - полный текст поста
+- **Комментарии** - список комментариев с именем автора, email и текстом
+- **Навигация** - кнопка возврата к списку с сохранением параметров поиска
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Приложение использует [JSONPlaceholder API](https://jsonplaceholder.typicode.com):
 
-## Deploy on Vercel
+- `GET /posts` - список постов с пагинацией и поиском
+- `GET /posts/:id` - один пост
+- `GET /posts/:id/comments` - комментарии поста
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Установка и запуск
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# Установка зависимостей
+npm install
+
+# Запуск в режиме разработки
+npm run dev
+
+# Сборка для продакшена
+npm run build
+
+# Запуск продакшен версии
+npm start
+```
+
+## Особенности реализации
+
+- **Server Components** - главная страница и страница поста используют Server Components для SEO
+- **Client Components** - интерактивные компоненты (формы, списки) помечены `'use client'`
+- **RTK Query кеширование** - автоматическое кеширование запросов с тегами
+- **URL синхронизация** - состояние поиска и пагинации сохраняется в URL параметрах
+- **Адаптивный дизайн** - оптимизация для мобильных устройств
+
+## Константы
+
+- `ITEMS_PER_PAGE = 10` - количество постов на странице
+- `MAX_PAGES = 10` - максимальное количество страниц в пагинаторе
+- `TRUNCATE_LENGTH = 150` - длина обрезки текста поста в списке
